@@ -43,7 +43,7 @@ git clone https://github.com/dmitriileonov93/kvartirka-test.git
 ```
 cd kvartirka-test/
 ```
-- Создайте файл .env для переменных окружения:
+- Создайте файл .env для переменных окружения в папке в файлом settings.py:
 ```
 touch kvartirka-test/kvartirka-test/.env
 ```
