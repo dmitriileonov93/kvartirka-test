@@ -1,6 +1,8 @@
+from typing_extensions import Self
 from django.conf import settings
 from mptt.templatetags.mptt_tags import cache_tree_children
 from rest_framework import serializers
+from drf_yasg.utils import swagger_serializer_method
 
 from posts.models import Comment, Post
 

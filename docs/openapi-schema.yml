@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: Kvartirka-test API
+  description: API allows to comment post and other comments as well as view posts and comments
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /api/post/{id}/:
+    get:
+      summary: Get Comment
+      parameters:
+      - name: id
+        in: path
+        description: Post ID in database
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Get post with nested comments up to depth of 3
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        "404":
+          description: Not found
+  /api/post/:
+    post:
+      summary: Create Post
+      requestBody:
+        description: Post to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPost'
+      responses:
+        "201":
+          description: Post created
+        "400":
+          description: Input validation failed
+  /api/comment/{id}/:
+    get:
+      summary: Get Comment
+      description: Get comment with nested comments up to depth of 3
+      parameters:
+      - name: id
+        in: path
+        description: Comment ID in database
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Comment with comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        "404":
+          description: Comment not found
+  /api/comment/:
+    post:
+      summary: Create Comment
+      requestBody:
+        description: Comment to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewComment'
+      responses:
+        "201":
+          description: Comment posted
+        "400":
+          description: Input validation failed
+components:
+  schemas:
+    Post:
+      required:
+      - text
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+      description: Single post
+    NewPost:
+      required:
+      - text
+      type: object
+      properties:
+        text:
+          type: string
+      description: New post
+    Comment:
+      required:
+      - text
+      - post
+      type: object
+      properties:
+        id:
+          type: integer
+        text:
+          type: string
+          example: Comment's text 
+        post:
+          type: integer
+        parent:
+          type: integer
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+          example:
+            - id: 0
+              text: string
+              post: 0
+              parent: 0
+              children: []
+      description: Single comment
+    NewComment:
+      required:
+      - text
+      - post
+      type: object
+      properties:
+        text:
+          type: string
+          example: string
+        post:
+          type: integer
+        parent:
+          type: integer
+      description: New comment
